@@ -43,7 +43,7 @@ jobs:
           sed -i "s|image = \"manjuappu1375/nginx-demo:.*\"|image = \"manjuappu1375/nginx-demo:$SHORT_SHA\"|g" \
             /home/ubuntu/learn-nomad-getting-started/aws/nginx-nomad/nginx.nomad.hcl
 
-     - name: Deploy to Nomad
+      - name: Deploy to Nomad
        run: |
          nomad job run -output /home/ubuntu/learn-nomad-getting-started/aws/nginx-nomad/nginx.nomad.hcl > /tmp/nginx.json
 
