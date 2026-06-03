@@ -1,0 +1,52 @@
+name: Build Push Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  build-and-deploy:
+
+    runs-on: self-hosted
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Short Commit ID
+        id: vars
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+
+      - name: Docker Login
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login \
+            -u "${{ secrets.DOCKER_USERNAME }}" \
+            --password-stdin
+
+      - name: Build Docker Image
+        run: |
+          docker build \
+            -t manjuappu1375/nginx-demo:${{ steps.vars.outputs.SHORT_SHA }} .
+
+      - name: Push Docker Image
+        run: |
+          docker push \
+            manjuappu1375/nginx-demo:${{ steps.vars.outputs.SHORT_SHA }}
+
+      - name: Update Nomad Job Image
+        run: |
+          SHORT_SHA=${{ steps.vars.outputs.SHORT_SHA }}
+
+          sed -i "s|image = \"manjuappu1375/nginx-demo:.*\"|image = \"manjuappu1375/nginx-demo:$SHORT_SHA\"|g" \
+            /home/ubuntu/nginx.nomad.hcl
+
+      - name: Deploy to Nomad
+        run: |
+          nomad job run -output /home/ubuntu/nginx.nomad.hcl > /tmp/nginx.json
+
+          curl -s -X POST "http://localhost:4646/v1/jobs" \
+            -H "Content-Type: application/json" \
+            -d @/tmp/nginx.json
