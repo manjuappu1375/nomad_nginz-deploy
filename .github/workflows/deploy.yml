@@ -44,9 +44,9 @@ jobs:
             /home/ubuntu/learn-nomad-getting-started/aws/nginx-nomad/nginx.nomad.hcl
 
       - name: Deploy to Nomad
-       run: |
-         nomad job run -output /home/ubuntu/learn-nomad-getting-started/aws/nginx-nomad/nginx.nomad.hcl > /tmp/nginx.json
+        run: |
+          nomad job run -output /home/ubuntu/learn-nomad-getting-started/aws/nginx-nomad/nginx.nomad.hcl > /tmp/nginx.json
 
-         curl -s -X POST "http://localhost:4646/v1/jobs" \
-           -H "Content-Type: application/json" \
-           -d @/tmp/nginx.json
+          curl -s -X POST "http://localhost:4646/v1/jobs" \
+            -H "Content-Type: application/json" \
+            -d @/tmp/nginx.json
