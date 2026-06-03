@@ -41,7 +41,7 @@ jobs:
           SHORT_SHA=${{ steps.vars.outputs.SHORT_SHA }}
 
           sed -i "s|image = \"manjuappu1375/nginx-demo:.*\"|image = \"manjuappu1375/nginx-demo:$SHORT_SHA\"|g" \
-            /home/ubuntu/learn-nomad-getting-started/aws/nginx-nomad
+            /home/ubuntu/learn-nomad-getting-started/aws/nginx-nomad/nginx.nomad.hcl
 
       - name: Deploy to Nomad
         run: |
