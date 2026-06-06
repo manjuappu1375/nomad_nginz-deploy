@@ -19,7 +19,7 @@ job "nginx-demo" {
       driver = "docker"
 
       config {
-        image = "manjuappu1375/nginx-demo:56b74c3"
+        image = "manjuappu1375/nginx-demo:latest"
         force_pull = true
         ports = ["http"]
       }
