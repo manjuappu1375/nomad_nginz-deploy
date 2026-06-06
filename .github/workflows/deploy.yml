@@ -39,14 +39,12 @@ jobs:
       - name: Update Nomad Job Image
         run: |
           SHORT_SHA=${{ steps.vars.outputs.SHORT_SHA }}
-
           sed -i "s|image = \"manjuappu1375/nginx-demo:.*\"|image = \"manjuappu1375/nginx-demo:$SHORT_SHA\"|g" \
-            /home/ubuntu/learn-nomad-getting-started/aws/nginx-nomad/nginx.nomad.hcl
+            nginx.nomad.hcl
 
       - name: Deploy to Nomad
         run: |
-          nomad job run -output /home/ubuntu/learn-nomad-getting-started/aws/nginx-nomad/nginx.nomad.hcl > /tmp/nginx.json
-
+          nomad job run -output nginx.nomad.hcl > /tmp/nginx.json
           curl -s -X POST "http://localhost:4646/v1/jobs" \
             -H "Content-Type: application/json" \
             -d @/tmp/nginx.json
