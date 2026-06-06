@@ -10,7 +10,7 @@ job "nginx-demo" {
 
     network {
       port "http" {
-        static = 81
+        static = 80
       }
     }
 
