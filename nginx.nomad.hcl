@@ -1,12 +1,31 @@
 job "nginx-demo" {
 
   datacenters = ["dc1"]
-
-  type = "service"
+  type        = "service"
 
   group "web" {
 
     count = 1
+
+    scaling {
+      enabled = true
+      min     = 1
+      max     = 5
+
+      policy {
+        cooldown            = "2m"
+        evaluation_interval = "30s"
+
+        check "cpu_usage" {
+          source = "nomad-apm"
+          query  = "avg_cpu"
+
+          strategy "target-value" {
+            target = 70
+          }
+        }
+      }
+    }
 
     network {
       port "http" {
@@ -15,13 +34,12 @@ job "nginx-demo" {
     }
 
     task "nginx" {
-
       driver = "docker"
 
       config {
-        image = "manjuappu1375/nginx-demo:latest"
+        image      = "manjuappu1375/nginx-demo:latest"
         force_pull = true
-        ports = ["http"]
+        ports      = ["http"]
       }
 
       resources {
