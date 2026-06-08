@@ -1,10 +1,8 @@
 job "nginx-demo" {
-
   datacenters = ["dc1"]
   type        = "service"
 
   group "web" {
-
     count = 1
 
     scaling {
@@ -18,7 +16,16 @@ job "nginx-demo" {
 
         check "cpu_usage" {
           source = "nomad-apm"
-          query  = "avg_cpu"
+          query  = "percentage-allocated_cpu"
+
+          strategy "target-value" {
+            target = 70
+          }
+        }
+
+        check "memory_usage" {
+          source = "nomad-apm"
+          query  = "percentage-allocated_memory"
 
           strategy "target-value" {
             target = 70
