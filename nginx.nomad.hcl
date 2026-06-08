@@ -16,19 +16,19 @@ job "nginx-demo" {
 
         check "cpu_usage" {
           source = "nomad-apm"
-          query  = "percentage-allocated_cpu"
+          query  = "avg_cpu"
 
           strategy "target-value" {
-            target = 70
+            target = 20
           }
         }
 
         check "memory_usage" {
           source = "nomad-apm"
-          query  = "percentage-allocated_memory"
+          query  = "avg_memory"
 
           strategy "target-value" {
-            target = 70
+            target = 20
           }
         }
       }
@@ -36,7 +36,7 @@ job "nginx-demo" {
 
     network {
       port "http" {
-        static = 80
+        to = 80
       }
     }
 
